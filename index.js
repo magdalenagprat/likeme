@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 
-const { obtenerPosts, agregarPost } = require("./consultas")
+const { obtenerPosts, agregarPost, agregarLikes, eliminarPost } = require("./consultas")
 
 const app = express()
 
@@ -21,5 +21,25 @@ app.post("/posts", async (req, res) => {
     const post = req.body
     await agregarPost(post.titulo, post.url, post.descripcion)
     res.json({ message: "Post agregado correctamente" })
+})
+
+app.put("/posts/like/:id", async (req, res) => {
+    const { id } = req.params
+    try {
+        await agregarLikes(id)
+        res.json({ message: "Like agregado" })
+    } catch (error) {
+        res.json({ error: "Error al agregar el like" })
+    }
+})
+
+app.delete("/posts/:id", async (req, res) => {
+    const { id } = req.params
+    try {
+        await eliminarPost(id)
+        res.json({ message: "Post eliminado correctamente" })
+    } catch (error) {
+        res.json({ error: "Error al eliminar post" })
+    }
 })
 
